@@ -19,9 +19,11 @@ This function is linked to out C# library.
 
 - Install RUST https://www.rust-lang.org/learn/get-started
 - Navigate to the `./lib/clipboard` directory
-- Execute `cargo build --release` to generate a .dll located in the `./clipboard/target/release` directory
+- Execute `cargo build --release` to generate a `clipthat_clipboard.dll` located in the `./clipboard/target/release` directory
 
 Once compiled the library should be added to the C# code as an embedded resource and dynamically linked. See the C# solution for details.
+
+*note you will not be able to build the CSharp librarys until the RUST binary is created*
 
 # CSHARP
 
