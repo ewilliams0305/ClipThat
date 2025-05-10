@@ -120,6 +120,6 @@ jobs:
       with:
         tag: ${{ needs.version.outputs.Version }}
         name: Release ${{ needs.version.outputs.Version }}
-        token: ${{ secrets.NUGET_PACKAGE_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         generateReleaseNotes: true
         body: "Production release candidate ${{ needs.version.outputs.Version }}"
