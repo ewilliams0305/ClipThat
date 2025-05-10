@@ -9,7 +9,24 @@ env:
 jobs:
 
   version:
-    uses: CeneroLLC/gitflow/.github/workflows/tag-version.yml@main
+    runs-on: ubuntu-latest
+    outputs:
+      Version: ${{ steps.gitversion.outputs.SemVer }}
+      CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 #fetch-depth is needed for GitVersion
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v2.0.1
+        with:
+          versionSpec: 5.x
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v2.0.1
 
   build-rust-linux:
     needs: version
@@ -84,7 +101,7 @@ jobs:
       run: dotnet build $SOLUTION --no-restore
 
     - name: Package Nuget
-      run: dotnet pack $SOLUTION -p:Version='${{ needs.version.outputs.Tag }}' -c Release -o bin/Packages
+      run: dotnet pack $SOLUTION -p:Version='${{ needs.version.outputs.Version }}' -c Release -o bin/Packages
 
     - name: Push packages to Nuget
       run: |
@@ -102,8 +119,8 @@ jobs:
     - name: Create Release
       uses: ncipollo/release-action@v1
       with:
-        tag: ${{ needs.version.outputs.Tag }}
-        name: Release ${{ needs.version.outputs.Tag }}
+        tag: ${{ needs.version.outputs.Version }}
+        name: Release ${{ needs.version.outputs.Version }}
         token: ${{ secrets.NUGET_PACKAGE_TOKEN }}
         generateReleaseNotes: true
-        body: "Production release candidate ${{ needs.version.outputs.Tag }}"
+        body: "Production release candidate ${{ needs.version.outputs.Version }}"
