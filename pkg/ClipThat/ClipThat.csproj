@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <None Include="..\..\lib\clipboard\target\release\clipthat_clipboard.dll">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/win-x64/native/clipthat_clipboard.dll</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    
+
+    <!-- Only include the LINUX file if it exists (When Running on CI) -->
+
+    <None Include="..\..\lib\clipboard\target\release\libclipthat_clipboard.so" Condition="Exists('..\..\lib\clipboard\target\release\libclipthat_clipboard.so')">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/linux-x64/native/libclipthat_clipboard.so</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
+  </ItemGroup>
+
+</Project>

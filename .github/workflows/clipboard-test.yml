@@ -1,0 +1,85 @@
+name: Clipboard Test
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - "**"
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-rust-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+    
+    - name: Build
+      run: cargo build --manifest-path ./lib/clipboard/Cargo.toml --release
+
+    - name: Upload Assembly
+      uses: actions/upload-artifact@v4.6.1
+      with:
+        name: linux-clipboard
+        path: ./lib/clipboard/target/release/libclipthat_clipboard.so
+
+  build-rust-windows:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: cargo build --manifest-path ./lib/clipboard/Cargo.toml --release
+
+    - name: Upload Assembly
+      uses: actions/upload-artifact@v4.6.1
+      with:
+        name: windows-clipboard
+        path: lib\clipboard\target\release\clipthat_clipboard.dll
+
+  dotnet-test:
+    needs: [ build-rust-linux, build-rust-windows ]
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'pkg/**.sln'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+  
+    - name: Download Windows DLL
+      uses: actions/download-artifact@v4.1.9
+      with:
+        name: windows-clipboard
+        path: ./lib/clipboard/target/release/
+
+    - name: Download Linux SO
+      uses: actions/download-artifact@v4.1.9
+      with:
+        name: linux-clipboard
+        path: ./lib/clipboard/target/release/
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.x
+
+    - name: Restore dependencies
+      run: dotnet restore $SOLUTION
+      
+    - name: Build Solution
+      run: dotnet build $SOLUTION --no-restore
+
+    - name: Test Solution
+      run: dotnet test $SOLUTION --no-restore --verbosity normal

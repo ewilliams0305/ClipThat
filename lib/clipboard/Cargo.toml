@@ -1,0 +1,12 @@
+[package]
+name = "clipthat-clipboard"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+arboard = "3"
+clipboard = "0.5.0"
+
+[lib]
+name = "clipthat_clipboard"
+crate-type = ["staticlib", "cdylib"]

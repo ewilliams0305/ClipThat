@@ -1,0 +1,109 @@
+name: Clipboard Package
+
+on:
+  workflow_dispatch:
+  
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+
+  version:
+    uses: CeneroLLC/gitflow/.github/workflows/tag-version.yml@main
+
+  build-rust-linux:
+    needs: version
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxcb1-dev libxcb-render0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+
+    - name: Build
+      run: |
+        cargo build --manifest-path ./lib/clipboard/Cargo.toml --release
+
+    - name: Upload Assembly
+      uses: actions/upload-artifact@v4.6.1
+      with:
+        name: linux-clipboard
+        path: ./lib/clipboard/target/release/libclipthat_clipboard.so
+
+  build-rust-windows:
+    needs: version
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: cargo build --manifest-path ./lib/clipboard/Cargo.toml --release
+
+    - name: Upload Assembly
+      uses: actions/upload-artifact@v4.6.1
+      with:
+        name: windows-clipboard
+        path: lib\clipboard\target\release\clipthat_clipboard.dll
+ 
+  dotnet-package:
+    needs: [ version, build-rust-linux, build-rust-windows ]
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'pkg/**.sln'
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+  
+    - name: Download Windows DLL
+      uses: actions/download-artifact@v4.1.9
+      with:
+        name: windows-clipboard
+        path: ./lib/clipboard/target/release/
+
+    - name: Download Linux SO
+      uses: actions/download-artifact@v4.1.9
+      with:
+        name: linux-clipboard
+        path: ./lib/clipboard/target/release/
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.x
+
+    - name: Restore dependencies
+      run: dotnet restore $SOLUTION
+      
+    - name: Build Solution
+      run: dotnet build $SOLUTION --no-restore
+
+    - name: Package Nuget
+      run: dotnet pack $SOLUTION -p:Version='${{ needs.version.outputs.Tag }}' -c Release -o bin/Packages
+
+    - name: Push packages to Nuget
+      run: |
+        for file in $(find bin/Packages -type f -name "*.nupkg"); do
+          echo $file
+          dotnet nuget push $file --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        done
+
+  github-release:
+    if: needs.version.outputs.IsMain == 'true' && needs.version.outputs.Commits > 0
+    runs-on: ubuntu-latest    
+    needs: [ version, dotnet-package ]
+
+    steps:  
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ needs.version.outputs.Tag }}
+        name: Release ${{ needs.version.outputs.Tag }}
+        token: ${{ secrets.NUGET_PACKAGE_TOKEN }}
+        generateReleaseNotes: true
+        body: "Production release candidate ${{ needs.version.outputs.Tag }}"
