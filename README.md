@@ -13,10 +13,10 @@ A clipboard monitoring tool written in RUST linked to C# for cross platform clip
 
 `./lib`
 
-Why rust, well there is simply NO good way to handle this in dotnet using both linux and windows.
+Why rust, well there is simply NO good way to handle this in dotnet using both linux and windows. 'that i could find anyway'
 
 The clipboard library is a background thread that monitors your clipboard, as text is copied it delgates this text to a function pointer.
-This function is linked to out C# library.
+This function is linked to our C# library.
 
 # Build Steps
 
@@ -38,7 +38,7 @@ The RUST library is added to the project with a relative path so its recreated e
 
 An example console application have been provided `CopyThat.Example`
 
-# Useage
+# Usage
 
 Create a new clipboard using the `ClipboardFactory`. Currently there are two different clipboards,
 one running a managed thread in Rust and another that runs on a CSharp thread. While the Rust thread is faster and more efficient
@@ -90,9 +90,9 @@ clipboard.StartMonitoringClipboard(text =>
 
 You can also send text to the clipboard.
 
-_please note you should be carful based on the useage,
-sending text to the clipboard will also invokde the monriting and execute the text recevied callback.  
-This could create an endless loop if not handled_
+Please note you should be carful based on the useage,
+sending text to the clipboard could also invokde the monriting and execute the text recevied callback.  
+This could create an endless loop if not handled
 
 ```csharp
 clipboard.SetClipboardText(data);
