@@ -1,6 +1,7 @@
 <img src="./docs/clipthat.png" alt="drawing" width="200"/>
 
 [![Clipboard Test](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml)
+[![Clipboard Package](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml)
 
 # CopyThat
 
