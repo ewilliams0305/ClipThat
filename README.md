@@ -3,7 +3,7 @@
 [![Clipboard Test](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml)
 [![Clipboard Package](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml)
 
-# CopyThat
+# ClipThat
 
 A clipboard monitoring tool written in RUST linked to C# for cross platform clipboard monitoring.
 
