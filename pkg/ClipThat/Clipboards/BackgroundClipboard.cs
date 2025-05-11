@@ -5,7 +5,7 @@ namespace ClipThat;
 /// <summary>
 /// Creates a new monitor clipboard that sends and receives text to and from the clipboard.
 /// </summary>
-public sealed class BackgroundClipboard : IClipboard
+internal sealed class BackgroundClipboard : IClipboard
 {
     private Action<string>? _clipboardTextReceived;
     private readonly Action<string, Exception?>? _exceptionProcessor;
