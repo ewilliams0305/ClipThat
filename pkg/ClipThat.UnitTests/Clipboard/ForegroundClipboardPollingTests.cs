@@ -1,10 +1,13 @@
-﻿using FluentAssertions;
+﻿using ClipThat.Setup;
+using FluentAssertions;
 
-namespace ClipThat.Tests;
+namespace ClipThat.Clipboard;
 
 public class ForegroundClipboardPollingTests
 {
-    [Theory]
+    
+
+    [TheorySkipsOnActions]
     [InlineData("hi my name is")]
     [InlineData("this is some other string")]
     [InlineData("and yet I don't know what else to type")]
@@ -20,7 +23,7 @@ public class ForegroundClipboardPollingTests
         clipboard.PollClipboard().Should().Be(text);
     }
 
-    [Theory]
+    [TheorySkipsOnActions]
     [InlineData("hi my name is")]
     [InlineData("this is some other string")]
     [InlineData("and yet I don't know what else to type")]
