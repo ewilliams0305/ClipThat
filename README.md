@@ -1,7 +1,7 @@
 <img src="./docs/clipthat.png" alt="drawing" width="200"/>
 
-[![Clipboard Test](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-test.yml)
-[![Clipboard Package](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml/badge.svg)](https://github.com/ewilliams0305/CopyThat/actions/workflows/clipboard-pack.yml)
+[![Clipboard Test](https://github.com/ewilliams0305/ClipThat/actions/workflows/clipboard-test.yml/badge.svg)](https://github.com/ewilliams0305/ClipThat/actions/workflows/clipboard-test.yml)
+[![Clipboard Package](https://github.com/ewilliams0305/ClipThat/actions/workflows/clipboard-pack.yml/badge.svg)](https://github.com/ewilliams0305/ClipThat/actions/workflows/clipboard-pack.yml)
 
 # ClipThat
 
@@ -33,10 +33,10 @@ Once compiled the library should be added to the C# code as an embedded resource
 `./pkg`
 
 Assuming you have complied the Rust library you dontnet solution should have no errors.
-The `CopyThat` project is a library that gets packed to a nuget. This library is fairly simply and just links into the RUST binary.
+The `ClipThat` project is a library that gets packed to a nuget. This library is fairly simply and just links into the RUST binary.
 The RUST library is added to the project with a relative path so its recreated everytime the RUST project is compiled.
 
-An example console application have been provided `CopyThat.Example`
+An example console application have been provided `ClipThat.Example`
 
 # Usage
 
